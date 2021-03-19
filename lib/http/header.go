@@ -336,7 +336,7 @@ func filterHeaders(h Header) {
 
 // Custom JSON Marshaller to comply with snake_case header names
 func (h Header) MarshalJSON() ([]byte, error) {
-	// filterHeaders(h)
+	filterHeaders(h)
 
 	headerMap := make(map[string]interface{})
 	for k, v := range h {
