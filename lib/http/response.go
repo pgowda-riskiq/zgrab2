@@ -44,7 +44,7 @@ type Response struct {
 	//
 	// Keys in the map are canonicalized (see CanonicalHeaderKey).
 	Header Header `json:"headers,omitempty"`
-
+	HeaderText string `json:"headers_raw"`
 	// Body represents the response body.
 	//
 	// The http Client and Transport guarantee that Body is always
@@ -203,7 +203,12 @@ func ReadResponse(r *bufio.Reader, req *Request) (*Response, error) {
 		return resp, err
 	}
 	resp.Header = Header(mimeHeader)
+	htBuf := bytes.NewBufferString("")
 
+	for k, v := range(mimeHeader) {
+		htBuf.WriteString(k + ": " + strings.Join(v, "") + "\n")
+	}
+	resp.HeaderText = htBuf.String()
 	fixPragmaCacheControl(resp.Header)
 
 	err = readTransfer(resp, r)
